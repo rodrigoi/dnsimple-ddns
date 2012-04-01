@@ -17,7 +17,7 @@ app.get "/", (request, response) -> response.send "nothing to see here"
 app.get "/update", (request, response) -> 
 	dns = new dnsimple settings
 	dns.update request.query["ip"]
-	response.send json: "object"
+	response.send ip: request.query["ip"]
 
 process.on "uncaughtException", (error) -> logger.error error
 process.nextTick -> logger.debug "tick"
