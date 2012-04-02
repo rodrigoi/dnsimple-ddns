@@ -11,7 +11,7 @@ app = express.createServer()
 
 app.use log4js.connectLogger(logger, level: log4js.levels.INFO )
 
-settings = JSON.parse fs.readFileSync "./settings.json"
+#settings = JSON.parse fs.readFileSync "./settings.json"
 
 app.get "/", (request, response) -> response.send "nothing to see here"
 app.get "/update", (request, response) -> 
@@ -24,7 +24,12 @@ app.get "/update", (request, response) ->
 
 	logger.debug "Changing ip to #{ip}"
 
-	dns = new dnsimple settings
+	dns = new dnsimple 
+		username: process.env.DNSIMPLE_USERNAME
+		token: process.env.DNSIMPLE_TOKEN
+		domain: process.env.DNSIMPLE_DOMAIN
+		recordID: process.env.DNSIMPLE_RECORDID
+
 	dns.update ip
 	response.send ip: ip
 
