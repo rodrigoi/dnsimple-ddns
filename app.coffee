@@ -15,9 +15,18 @@ settings = JSON.parse fs.readFileSync "./settings.json"
 
 app.get "/", (request, response) -> response.send "nothing to see here"
 app.get "/update", (request, response) -> 
+	ip = request.header "x-forwarded-for"
+	if ip
+		ip = ip.split(",")[0]
+
+	if not ip
+		ip = request.connection.remoteAddress
+
+	logger.debug "Changing ip to #{ip}"
+
 	dns = new dnsimple settings
-	dns.update request.query["ip"]
-	response.send ip: request.query["ip"]
+	dns.update ip
+	response.send ip: ip
 
 process.on "uncaughtException", (error) -> logger.error error
 process.nextTick -> logger.debug "tick"
