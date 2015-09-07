@@ -22,7 +22,7 @@ app.get('/update', (req, res) => {
   var data = {
     record: {
       content: ip,
-      ttl: 7200
+      ttl: 3600
     }
   };
 
